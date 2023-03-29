@@ -2,6 +2,7 @@ import React from 'react';
 
 function overviewTable(props) {
     const { data } = props;
+    const { serverid} = props ;
     const tStyle ={
         padding: "15px",
         backgroundColor: "#55608f",
@@ -48,6 +49,10 @@ function overviewTable(props) {
                             </tbody>
                         </table>
                     </td>
+                </tr>
+                <tr>
+                <a  key={"link_"+serverid} href={"/cpu/" + serverid} className="productlink">
+                        view cpu list </a>
                 </tr>
             </tbody>
         </table>

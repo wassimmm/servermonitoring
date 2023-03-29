@@ -51,9 +51,10 @@ class Server extends Component {
                 {connection != null && <>
                     <ProcessTable data={connection.processes[0]} serverId={server}>
                     </ProcessTable>
-                 
-                    <OverviewTable data={connection} >
+                    
+                    <OverviewTable data={connection} serverid = {server} >
                     </OverviewTable>
+                 
                 </>}
                 <div>{this.props.serverError !== "" && <div>{this.props.serverError.toString()}</div>}
                 </div>
