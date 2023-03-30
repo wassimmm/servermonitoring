@@ -54,6 +54,10 @@ function overviewTable(props) {
                 <a  key={"link_"+serverid} href={"/cpu/" + serverid} className="productlink">
                         view cpu list </a>
                 </tr>
+                <tr>
+                <a  key={"link_"+serverid} href={"/network/" + serverid} className="productlink">
+                        view network list </a>
+                </tr>
             </tbody>
         </table>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import  '../styles/process_table.css'
+import  '../styles/cpu_table.css'
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {connectToServer} from "../../actions/serverActions.js";
@@ -38,13 +38,12 @@ function cpuTable(props) {
                     <td className="td-cpu">{item.user}</td>
                     <td className="td-cpu">{item.root}</td>
                     
-                    <td
+                    {/* <td
                         className="td-cpu"
                         style={{ display: "flex", justifyContent: "space-around" }}
                     >
-                        {/* <button onClick={(e) => onKillClick(e, item.pid, serverId, user.id, props.connectToServer)}>KILL</button>
-                        <button>DETAILS</button> */}
-                    </td>
+                   
+                    </td> */}
                 </tr>
             ))}
             </tbody>
