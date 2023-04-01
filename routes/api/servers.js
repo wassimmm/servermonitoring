@@ -11,6 +11,7 @@ const topparser = require("../../utils/topParser");
 const privParser = require("../../utils/privParser");
 const psParser = require("../../utils/psParser");
 const nmcliParser = require("../../utils/nmcliParser")
+const firewallParser = require("../../utils/firewallParser")
 
 async function connectToSSHServer(server) {
     return new Promise((resolve, reject) => {
@@ -69,6 +70,10 @@ async function cmdOption(conn, option, res) {
             conn.exec('nmcli device status',(err,stream) => {
                 executeCMD(err, stream ,option, res);
             })
+        }else if (option === 'firewall'){
+            conn.exec('firewall-cmd --get-active-zones',(err,stream) => {
+                executeCMD(err, stream ,option, res);
+                })
         }
          else if (option.startsWith('sudo kill')) {
            console.log('kill process');
@@ -122,7 +127,11 @@ function parser(data, option){
         //  console.log(data);
         //  return data.toString();
     }
-
+    if(option.startsWith('firewall')) {
+            return firewallParser(data.toString());
+            // console.log(data);
+            // return data.toString();
+    }
     if (option.startsWith('sudo -l')) {
         return privParser(data.toString());
     }
