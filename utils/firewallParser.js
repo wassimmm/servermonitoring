@@ -9,7 +9,7 @@ function parseProcessLinefirewall(str,error){
         var data=[...str.matchAll(regex)]
 
         result= {
-            "state":data[0][0],
+            "interface":data[0][0],
             "activeZones":data[1][0],
         }
     }catch(err){error(err)}

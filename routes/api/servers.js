@@ -57,7 +57,26 @@ function executeSudoCommand(conn, option, res) {
 }
 
 async function cmdOption(conn, option, res) {
-    if (option === "processes") {
+     if ( typeof option === 'object'){
+      if (option.operation === "request"){
+
+        conn.exec("sudo tcpflow -p -c -i "+ option.interface +" port 80 | grep -oE '(GET|POST) .* HTTP/1.[01]|Host: .*'",(err,stream) => {
+            executeCMD(err, stream ,option.operation , res);
+          })
+      }else if (option.operation === "startfirewall")
+      {
+        conn.exec('systemctl start firewalld && firewall-cmd --state',(err,stream) => {
+            executeCMD(err, stream, option, res);
+      })
+      
+      }else if (option.operation === "stopfirewall")
+      {
+        conn.exec('systemctl stop firewalld && firewall-cmd --state',(err,stream) => {
+            executeCMD(err, stream, option, res);
+      })
+      }
+       }
+      else{ if (option === "processes") {
          conn.exec('top -n 1 -b', (err, stream) => {
       //  conn.exec('ps aux | grep '+'firefox', (err, stream) => {
         executeCMD(err, stream, option, res)
@@ -70,11 +89,14 @@ async function cmdOption(conn, option, res) {
             conn.exec('nmcli device status',(err,stream) => {
                 executeCMD(err, stream ,option, res);
             })
+       
         }else if (option === 'firewall'){
             conn.exec('firewall-cmd --get-active-zones',(err,stream) => {
                 executeCMD(err, stream ,option, res);
                 })
         }
+        
+        
          else if (option.startsWith('sudo kill')) {
            console.log('kill process');
            executeSudoCommand(conn, option, res);
@@ -85,7 +107,7 @@ async function cmdOption(conn, option, res) {
          res.status(404).json(`NO OPTION FOR ${option}.`);
          console.log(`NO OPTION FOR ${option}.`);
         }
-}
+}}
 
 function executeCMD(err, stream, cmd, res) {
     if (err) {
@@ -127,6 +149,11 @@ function parser(data, option){
         //  console.log(data);
         //  return data.toString();
     }
+    if(option.startsWith('request')) {
+      //  return tcpflowParser(data.toString());
+         console.log(data);
+         return data.toString();
+   }
     if(option.startsWith('firewall')) {
             return firewallParser(data.toString());
             // console.log(data);
