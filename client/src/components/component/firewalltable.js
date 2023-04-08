@@ -44,6 +44,7 @@ function firewallTable(props) {
                     </td> */}
                 </tr>
             ))}
+            
             </tbody>
         </table>
     );

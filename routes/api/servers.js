@@ -12,6 +12,8 @@ const privParser = require("../../utils/privParser");
 const psParser = require("../../utils/psParser");
 const nmcliParser = require("../../utils/nmcliParser")
 const firewallParser = require("../../utils/firewallParser")
+const startfirewallParser = require("../../utils/startfirewallParser")
+const stopfirewallParser = require("../../utils/stopfirewallParser")
 
 async function connectToSSHServer(server) {
     return new Promise((resolve, reject) => {
@@ -57,26 +59,26 @@ function executeSudoCommand(conn, option, res) {
 }
 
 async function cmdOption(conn, option, res) {
-     if ( typeof option === 'object'){
-      if (option.operation === "request"){
+    //  if ( typeof option === 'object'){
+    //   if (option.operation === "request"){
 
-        conn.exec("sudo tcpflow -p -c -i "+ option.interface +" port 80 | grep -oE '(GET|POST) .* HTTP/1.[01]|Host: .*'",(err,stream) => {
-            executeCMD(err, stream ,option.operation , res);
-          })
-      }else if (option.operation === "startfirewall")
+    //     conn.exec("sudo tcpflow -p -c -i "+ option.interface +" port 80 | grep -oE '(GET|POST) .* HTTP/1.[01]|Host: .*'",(err,stream) => {
+    //         executeCMD(err, stream ,option.operation , res);
+    //       })
+      if (option === "request")
       {
-        conn.exec('systemctl start firewalld && firewall-cmd --state',(err,stream) => {
+        conn.exec('netstat -tupan | grep 192.168.153.133',(err,stream) => {
             executeCMD(err, stream, option, res);
-      })
+      });
       
-      }else if (option.operation === "stopfirewall")
+      }else if (option === "stopfirewall")
       {
-        conn.exec('systemctl stop firewalld && firewall-cmd --state',(err,stream) => {
+        conn.exec('systemctl stop firewalld ',(err,stream) => {
             executeCMD(err, stream, option, res);
-      })
+      });
       }
-       }
-      else{ if (option === "processes") {
+       
+      else if (option === "processes") {
          conn.exec('top -n 1 -b', (err, stream) => {
       //  conn.exec('ps aux | grep '+'firefox', (err, stream) => {
         executeCMD(err, stream, option, res)
@@ -91,7 +93,8 @@ async function cmdOption(conn, option, res) {
             })
        
         }else if (option === 'firewall'){
-            conn.exec('firewall-cmd --get-active-zones',(err,stream) => {
+            
+            conn.exec('firewall-cmd --get-active-zones ',(err,stream) => {
                 executeCMD(err, stream ,option, res);
                 })
         }
@@ -107,7 +110,7 @@ async function cmdOption(conn, option, res) {
          res.status(404).json(`NO OPTION FOR ${option}.`);
          console.log(`NO OPTION FOR ${option}.`);
         }
-}}
+}
 
 function executeCMD(err, stream, cmd, res) {
     if (err) {
@@ -149,11 +152,21 @@ function parser(data, option){
         //  console.log(data);
         //  return data.toString();
     }
-    if(option.startsWith('request')) {
-      //  return tcpflowParser(data.toString());
-         console.log(data);
-         return data.toString();
-   }
+//     if(option.startsWith('request')) {
+//       //  return tcpflowParser(data.toString());
+//          console.log(data);
+//          return data.toString();
+//    }
+   if(option.startsWith('request')) {
+    //  return tcpflowParser(data.toString());
+       console.log(data);
+       return data.toString();
+    }
+    if(option.startsWith('stopfirewall')) {
+    //  return tcpflowParser(data.toString());
+       console.log(data);
+       return data.toString();
+    }
     if(option.startsWith('firewall')) {
             return firewallParser(data.toString());
             // console.log(data);

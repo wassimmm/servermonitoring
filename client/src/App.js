@@ -55,6 +55,7 @@ class App extends Component {
               <PrivateRoute exact path="/cpu/:id" component ={CpuServer}/>
               <PrivateRoute exact path="/network/:id" component ={Networkserver}/>
               <PrivateRoute exact path="/firewall/:id" component ={FirewallServer}/>
+            
             </Switch>
               
 
