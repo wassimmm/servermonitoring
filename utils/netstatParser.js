@@ -1,7 +1,7 @@
 
 
 
-function parseProcessLinestartfirewall(str,error){
+function parseProcessLinerequest(str,error){
     var result={}
     var regex=/(?<=)\S+/g //capture values beetween spaces
     var result={}
@@ -9,8 +9,14 @@ function parseProcessLinestartfirewall(str,error){
         var data=[...str.matchAll(regex)]
 
         result= {
-            "interface":data[0][0],
-          
+            "protocol":data[0][0],
+            "SentQ":data[1][0],
+            "RecvQ":data[2][0],
+            "LocalAddress":data[3][0],
+            "ForeignAddress":data[4][0],
+            "State":data[5][0],
+            "ProgramName":data[6][0],
+            
         }
     }catch(err){error(err)}
     return result
@@ -20,13 +26,13 @@ module.exports=function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(
      var data=data.split("\n").filter(v=>v!="")
      var result={
 
-        startfirewall:[...( [
+        request:[...( [
                  (()=>{
                  var result=[]
                  for (var i=1;i<data.length;i++){
                      var proc=null
                      try{
-                         var proc=parseProcessLinestartfirewall(data[i],error)
+                         var proc=parseProcessLinerequest(data[i],error)
                          if(typeof options.pid_filter=="function"){
                              proc=options.pid_filter(proc)
                          }//if

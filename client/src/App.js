@@ -17,6 +17,7 @@ import Server from "./components/dashboard/Server.js";
 import CpuServer from "./components/dashboard/Cpuserver.js";
 import FirewallServer from "./components/dashboard/Firewallserver.js";
 import Networkserver from "./components/dashboard/Networkserver.js";
+import RequestServer from "./components/dashboard/Requestserver.js";
 import "./App.css";
 
 // Check for token to keep user logged in
@@ -55,6 +56,7 @@ class App extends Component {
               <PrivateRoute exact path="/cpu/:id" component ={CpuServer}/>
               <PrivateRoute exact path="/network/:id" component ={Networkserver}/>
               <PrivateRoute exact path="/firewall/:id" component ={FirewallServer}/>
+              <PrivateRoute exact path="/request/:id" component ={RequestServer}/>
             
             </Switch>
               

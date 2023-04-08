@@ -12,7 +12,7 @@ const privParser = require("../../utils/privParser");
 const psParser = require("../../utils/psParser");
 const nmcliParser = require("../../utils/nmcliParser")
 const firewallParser = require("../../utils/firewallParser")
-const startfirewallParser = require("../../utils/startfirewallParser")
+const netstatParser = require("../../utils/netstatParser")
 const stopfirewallParser = require("../../utils/stopfirewallParser")
 
 async function connectToSSHServer(server) {
@@ -158,9 +158,9 @@ function parser(data, option){
 //          return data.toString();
 //    }
    if(option.startsWith('request')) {
-    //  return tcpflowParser(data.toString());
-       console.log(data);
-       return data.toString();
+       return netstatParser(data.toString());
+    //    console.log(data);
+    //    return data.toString();
     }
     if(option.startsWith('stopfirewall')) {
     //  return tcpflowParser(data.toString());
