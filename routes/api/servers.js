@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const { exec } = require('child_process');
 const User = require("../../models/User");
 const Server = require("../../models/Server");
 const mongoose = require("mongoose");
@@ -13,7 +13,7 @@ const psParser = require("../../utils/psParser");
 const nmcliParser = require("../../utils/nmcliParser")
 const firewallParser = require("../../utils/firewallParser")
 const netstatParser = require("../../utils/netstatParser")
-const stopfirewallParser = require("../../utils/stopfirewallParser")
+const startParser = require("../../utils/startParser")
 
 async function connectToSSHServer(server) {
     return new Promise((resolve, reject) => {
@@ -58,7 +58,7 @@ function executeSudoCommand(conn, option, res) {
     })
 }
 
-async function cmdOption(conn, option, res) {
+async function cmdOption(conn, option, res, serverIp) {
     //  if ( typeof option === 'object'){
     //   if (option.operation === "request"){
 
@@ -67,15 +67,25 @@ async function cmdOption(conn, option, res) {
     //       })
       if (option === "request")
       {
-        conn.exec('netstat -tupan | grep 192.168.153.133',(err,stream) => {
+    //   {  console.log(" ip du serveur " + 'netstat -tupan | grep '+ serverIp)
+        conn.exec(`netstat -tupan | grep ${serverIp}` ,(err,stream) => {
             executeCMD(err, stream, option, res);
+            
       });
       
-      }else if (option === "stopfirewall")
-      {
-        conn.exec('systemctl stop firewalld ',(err,stream) => {
-            executeCMD(err, stream, option, res);
-      });
+         }else if (option === "start_firewall")
+        {
+           conn.exec('sudo service firewalld start', (error,stdout, stderr) => {
+                if (error) {
+                  console.error(`exec error: ${error}`);
+                  res.status(500).send('Failed to start firewall');
+                } else {
+                  console.log(`stdout: ${stdout}`);
+                  console.error(`stderr: ${stderr}`);
+                  res.send('Firewall started successfully');
+                }
+              });
+       
       }
        
       else if (option === "processes") {
@@ -162,11 +172,11 @@ function parser(data, option){
     //    console.log(data);
     //    return data.toString();
     }
-    if(option.startsWith('stopfirewall')) {
-    //  return tcpflowParser(data.toString());
-       console.log(data);
-       return data.toString();
-    }
+     if(option.startsWith('start_firewall')) {
+          return startParser(data.toString());
+        //  console.log(data);
+        //  return data.toString();
+     }
     if(option.startsWith('firewall')) {
             return firewallParser(data.toString());
             // console.log(data);
@@ -177,6 +187,11 @@ function parser(data, option){
     }
     return data
 }
+
+
+
+
+
 
 router.post("/add_server", (req, res) => {
     console.log(req.body.owner)
@@ -227,7 +242,7 @@ router.post('/connectToServer', async (req, res) => {
                                 password: results.password
                             }).then(async (conn) => {
                                     // Connection successful, do something with the `conn` object
-                                    await cmdOption(conn, req.body.option, res)
+                                    await cmdOption(conn, req.body.option, res,results.ip)
                                 }).catch((err) => {
                                     // Connection failed, handle the error
                                     console.log(`SSH connection error: ${err.message}`);

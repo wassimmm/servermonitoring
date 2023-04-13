@@ -64,4 +64,6 @@ const mapStateToProps = state => ({
     status: state.server
 });
 
+
+
 export default connect(mapStateToProps, { connectToServer })(firewallTable);

@@ -14,8 +14,9 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
 import AddServer from "./components/dashboard/AddServer.js";
 import Server from "./components/dashboard/Server.js";
-import CpuServer from "./components/dashboard/Cpuserver.js";
-import FirewallServer from "./components/dashboard/Firewallserver.js";
+import CpuServer from "./components/dashboard/cpuserver.js";
+import Startbutton from "./components/dashboard/Startbuttonserver.js";
+import FirewallServer from "./components/dashboard/firewallserver.js";
 import Networkserver from "./components/dashboard/Networkserver.js";
 import RequestServer from "./components/dashboard/Requestserver.js";
 import "./App.css";
@@ -57,11 +58,12 @@ class App extends Component {
               <PrivateRoute exact path="/network/:id" component ={Networkserver}/>
               <PrivateRoute exact path="/firewall/:id" component ={FirewallServer}/>
               <PrivateRoute exact path="/request/:id" component ={RequestServer}/>
-            
+              <PrivateRoute exact path="/button/:id" component ={Startbutton}/>
             </Switch>
               
 
           </div>
+     
         
         </Router>
       </Provider>

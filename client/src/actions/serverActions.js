@@ -15,6 +15,7 @@ export const addServer = (serverData, history) => dispatch => {
         );
 };
 
+
 export const connectToServer = (serverId, userId, cmd) => dispatch => {
 
     const connectionData = {

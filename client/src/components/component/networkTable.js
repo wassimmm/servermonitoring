@@ -45,8 +45,11 @@ function networkTable(props) {
                     
                     </td> */}
                 </tr>
+                
             ))}
+             
             </tbody>
+          
         </table>
     );
 }

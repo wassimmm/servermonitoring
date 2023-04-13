@@ -1,7 +1,7 @@
 
 
 
-function parseProcessLinestopfirewall(str,error){
+function parseProcessLinestartfirewall(str,error){
     var result={}
     var regex=/(?<=)\S+/g //capture values beetween spaces
     var result={}
@@ -20,13 +20,13 @@ module.exports=function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(
      var data=data.split("\n").filter(v=>v!="")
      var result={
 
-        stopfirewall:[...( [
+        start_firewall:[...( [
                  (()=>{
                  var result=[]
                  for (var i=1;i<data.length;i++){
                      var proc=null
                      try{
-                         var proc=parseProcessLinestopfirewall(data[i],error)
+                         var proc=parseProcessLinestartfirewall(data[i],error)
                          if(typeof options.pid_filter=="function"){
                              proc=options.pid_filter(proc)
                          }//if

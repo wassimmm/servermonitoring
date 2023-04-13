@@ -55,6 +55,10 @@ function overviewTable(props) {
                         view cpu list </a>
                 </tr>
                 <tr>
+                <a  key={"link_"+serverid} href={"/request/" + serverid} className="productlink">
+                        view network requests list </a>
+                </tr>
+                <tr>
                 <a  key={"link_"+serverid} href={"/network/" + serverid} className="productlink">
                         view network list </a>
                 </tr>
@@ -62,10 +66,8 @@ function overviewTable(props) {
                 <a  key={"link_"+serverid} href={"/firewall/" + serverid} className="productlink">
                         view firewall list </a>
                 </tr>
-                <tr>
-                <a  key={"link_"+serverid} href={"/request/" + serverid} className="productlink">
-                        view network requests list </a>
-                </tr>
+                
+               
             </tbody>
         </table>
     );
