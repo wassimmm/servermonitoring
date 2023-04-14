@@ -13,7 +13,7 @@ const psParser = require("../../utils/psParser");
 const nmcliParser = require("../../utils/nmcliParser")
 const firewallParser = require("../../utils/firewallParser")
 const netstatParser = require("../../utils/netstatParser")
-const startParser = require("../../utils/startParser")
+const bandwidthParser = require("../../utils/bandwidthParser")
 
 async function connectToSSHServer(server) {
     return new Promise((resolve, reject) => {
@@ -93,20 +93,13 @@ async function cmdOption(conn, option, res, serverIp) {
         //     });
         //   });
         // }      
-         else if (option === "start_firewall")
-        {
-           conn.exec('sudo service firewalld start', (error,stdout, stderr) => {
-                if (error) {
-                  console.error(`exec error: ${error}`);
-                  res.status(500).send('Failed to start firewall');
-                } else {
-                  console.log(`stdout: ${stdout}`);
-                  console.error(`stderr: ${stderr}`);
-                  res.send('Firewall started successfully');
-                }
-              });
-       
-      }
+
+         else if (option === 'bandwidth'){
+          conn.exec("speedtest-cli --json | jq '{download, upload, ping, timestamp, bytes_sent, bytes_received, share}'",(err,stream) => {
+              executeCMD(err, stream ,option, res);
+          })
+        }
+        
        
       else if (option === "processes") {
          conn.exec('top -n 1 -b', (err, stream) => {
@@ -193,11 +186,11 @@ function parser(data, option){
     //    return data.toString();
     }
     
-     if(option.startsWith('start_firewall')) {
-          return startParser(data.toString());
-        //  console.log(data);
-        //  return data.toString();
-     }
+      if(option.startsWith('bandwidth')) {
+           return bandwidthParser(data.toString());
+        //    console.log(data);
+        //    return data.toString();
+      }
     if(option.startsWith('firewall')) {
             return firewallParser(data.toString());
             // console.log(data);
