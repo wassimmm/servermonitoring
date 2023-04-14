@@ -59,6 +59,8 @@ class App extends Component {
               <PrivateRoute exact path="/firewall/:id" component ={FirewallServer}/>
               <PrivateRoute exact path="/request/:id" component ={RequestServer}/>
               <PrivateRoute exact path="/button/:id" component ={Startbutton}/>
+              
+              
             </Switch>
               
 

@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 const User = require("../../models/User");
 const Server = require("../../models/Server");
 const mongoose = require("mongoose");
-
+const http = require('http');
 
 const { Client } = require('ssh2');
 const topparser = require("../../utils/topParser");
@@ -65,15 +65,35 @@ async function cmdOption(conn, option, res, serverIp) {
     //     conn.exec("sudo tcpflow -p -c -i "+ option.interface +" port 80 | grep -oE '(GET|POST) .* HTTP/1.[01]|Host: .*'",(err,stream) => {
     //         executeCMD(err, stream ,option.operation , res);
     //       })
-      if (option === "request")
-      {
-    //   {  console.log(" ip du serveur " + 'netstat -tupan | grep '+ serverIp)
-        conn.exec(`netstat -tupan | grep ${serverIp}` ,(err,stream) => {
-            executeCMD(err, stream, option, res);
+    //   if (option === "request")
+    //   {
+    // // //////  {  console.log(" ip du serveur " + 'netstat -tupan | grep '+ serverIp)
+    //     conn.exec(`netstat -tupan | grep ${serverIp}` ,(err,stream) => {
+    //         executeCMD(err, stream, option, res);
             
-      });
-      
-         }else if (option === "start_firewall")
+    //   });
+     // }
+     
+        // ...
+         if (option === "request") {
+          conn.exec(`netstat -tupan | grep ${serverIp}`, (err, stream) => {
+            executeCMD(err, stream, option, res,(processes) => {
+              // Sort processes based on query parameters
+              const sortBy = req.query.sortBy || 'ApplicationProtocol';
+              const sortOrder = req.query.sortOrder || 'asc';
+              processes.sort((a, b) => {
+                if (sortOrder === 'asc') {
+                  return a[sortBy] - b[sortBy];
+                } else {
+                  return b[sortBy] - a[sortBy];
+                }
+              });
+              
+         
+            });
+          });
+        }      
+         else if (option === "start_firewall")
         {
            conn.exec('sudo service firewalld start', (error,stdout, stderr) => {
                 if (error) {
@@ -120,7 +140,7 @@ async function cmdOption(conn, option, res, serverIp) {
          res.status(404).json(`NO OPTION FOR ${option}.`);
          console.log(`NO OPTION FOR ${option}.`);
         }
-}
+   }
 
 function executeCMD(err, stream, cmd, res) {
     if (err) {
@@ -172,6 +192,7 @@ function parser(data, option){
     //    console.log(data);
     //    return data.toString();
     }
+    
      if(option.startsWith('start_firewall')) {
           return startParser(data.toString());
         //  console.log(data);

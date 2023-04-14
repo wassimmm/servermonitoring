@@ -77,7 +77,7 @@ function parseProcessLinerequest(str,error){
             "RecvQ":data[2][0],
             "LocalAddress":data[3][0],
             "ForeignAddress":data[4][0],
-            "applicationProtocol":protocol,
+            "ApplicationProtocol":protocol,
             "State":data[5][0],
             "ProgramName":data[6][0],
             
