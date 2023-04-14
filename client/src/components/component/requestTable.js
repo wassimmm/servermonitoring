@@ -10,59 +10,7 @@ import {connectToServer} from "../../actions/serverActions.js";
 //     connectToServer(serverId, userId, "sudo kill -9 "+pid);
 // };
 
-// function requestTable(props) {
-//     const { data, serverId } = props;
 
-//     // Check if the data prop is defined
-//     if (!data) {
-//         return null;
-//     }
-
-//     const { user } = props.auth;
-
-//     return (
-//         <table className="table-request">
-//             <thead className="thead-request">
-//             <tr className="tr-request">
-//                 <th className="th-request">protocol</th>
-//                 <th className="th-request">Sent-Q</th>
-//                 <th className="th-request">Recv-Q</th>
-//                 <th className="th-request">Local Address</th>
-//                 <th className="th-request">Foreign Address</th>
-//                 <th className="th-request">Application Protocol</th>
-//                 <th className="th-request">State</th>
-//                 <th className="th-request">Program Name</th>
-               
-//             </tr>
-//             </thead>
-//             <tbody className="tbody-request">
-//             {data.map((item) => (
-//                 <tr className="tr-request" key={item.pid}>
-//                     <td className="td-request">{item.protocol}</td>
-//                     <td className="td-request">{item.SentQ}</td>
-//                     <td className="td-request">{item.RecvQ}</td>
-//                     <td className="td-request">{item.LocalAddress}</td>
-//                     <td className="td-request">{item.ForeignAddress}</td>
-//                     <td className="td-request">{item.ApplicationProtocol}</td>
-//                     <td className="td-request">{item.State}</td>
-//                     <td className="td-request">{item.ProgramName}</td>
-                    
-//                     {/* <td
-//                         className="td-network"
-//                         style={{ display: "flex", justifyContent: "space-around" }}
-//                     >
-                    
-//                     </td> */}
-//                 </tr>
-//             ))}
-//             </tbody>
-//         </table>
-//     );
-
-
-
-    
-// }
 
 
 
@@ -90,11 +38,11 @@ function requestTable(props) {
       <button
         onClick={() =>
           setSortBy((prevSortBy) =>
-            prevSortBy === "ApplicationProtocol" ? "ProgramName" : "ApplicationProtocol"
+            prevSortBy === "ApplicationProtocol" ? "ForeignAddress": "ApplicationProtocol"
           )
         }
       >
-        Sort by {sortBy === "ApplicationProtocol" ? "Program Name" : "Application Protocol"}
+        Sort by {sortBy === "ApplicationProtocol" ? "ForeignAddress": "Application Protocol"}
       </button>
       <table className="table-request">
         <thead className="thead-request">

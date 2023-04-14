@@ -65,34 +65,34 @@ async function cmdOption(conn, option, res, serverIp) {
     //     conn.exec("sudo tcpflow -p -c -i "+ option.interface +" port 80 | grep -oE '(GET|POST) .* HTTP/1.[01]|Host: .*'",(err,stream) => {
     //         executeCMD(err, stream ,option.operation , res);
     //       })
-    //   if (option === "request")
-    //   {
-    // // //////  {  console.log(" ip du serveur " + 'netstat -tupan | grep '+ serverIp)
-    //     conn.exec(`netstat -tupan | grep ${serverIp}` ,(err,stream) => {
-    //         executeCMD(err, stream, option, res);
+       if (option === "request")
+       {
+    //  {  console.log(" ip du serveur " + 'netstat -tupan | grep '+ serverIp)
+         conn.exec(`netstat -tupan | grep ${serverIp}` ,(err,stream) => {
+             executeCMD(err, stream, option, res);
             
-    //   });
-     // }
+       });
+      }
      
         // ...
-         if (option === "request") {
-          conn.exec(`netstat -tupan | grep ${serverIp}`, (err, stream) => {
-            executeCMD(err, stream, option, res,(processes) => {
-              // Sort processes based on query parameters
-              const sortBy = req.query.sortBy || 'ApplicationProtocol';
-              const sortOrder = req.query.sortOrder || 'asc';
-              processes.sort((a, b) => {
-                if (sortOrder === 'asc') {
-                  return a[sortBy] - b[sortBy];
-                } else {
-                  return b[sortBy] - a[sortBy];
-                }
-              });
+        //  if (option === "request") {
+        //   conn.exec(`netstat -tupan | grep ${serverIp}`, (err, stream) => {
+        //     executeCMD(err, stream, option, res,(processes) => {
+        //       // Sort processes based on query parameters
+        //       const sortBy = req.query.sortBy || 'ApplicationProtocol';
+        //       const sortOrder = req.query.sortOrder || 'asc';
+        //       processes.sort((a, b) => {
+        //         if (sortOrder === 'asc') {
+        //           return a[sortBy] - b[sortBy];
+        //         } else {
+        //           return b[sortBy] - a[sortBy];
+        //         }
+        //       });
               
          
-            });
-          });
-        }      
+        //     });
+        //   });
+        // }      
          else if (option === "start_firewall")
         {
            conn.exec('sudo service firewalld start', (error,stdout, stderr) => {
