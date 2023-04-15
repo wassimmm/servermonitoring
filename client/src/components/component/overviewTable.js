@@ -66,6 +66,11 @@ function overviewTable(props) {
                 <a  key={"link_"+serverid} href={"/firewall/" + serverid} className="productlink">
                         view firewall list </a>
                 </tr>
+                <tr>
+                <a  key={"link_"+serverid} href={"/bandwidth/" + serverid} className="productlink">
+                        view bandwidth list </a>
+                </tr>
+                
                 
                 
                

@@ -18,6 +18,7 @@ import CpuServer from "./components/dashboard/cpuserver.js";
 import Startbutton from "./components/dashboard/Startbuttonserver.js";
 import FirewallServer from "./components/dashboard/firewallserver.js";
 import Networkserver from "./components/dashboard/Networkserver.js";
+import Bandwidthserver from "./components/dashboard/Bandwidthserver.js";
 import RequestServer from "./components/dashboard/Requestserver.js";
 import "./App.css";
 
@@ -58,7 +59,8 @@ class App extends Component {
               <PrivateRoute exact path="/network/:id" component ={Networkserver}/>
               <PrivateRoute exact path="/firewall/:id" component ={FirewallServer}/>
               <PrivateRoute exact path="/request/:id" component ={RequestServer}/>
-              <PrivateRoute exact path="/button/:id" component ={Startbutton}/>
+              <PrivateRoute exact path="/bandwidth/:id" component ={Bandwidthserver}/>
+              {/* <PrivateRoute exact path="/button/:id" component ={Startbutton}/> */}
               
               
             </Switch>

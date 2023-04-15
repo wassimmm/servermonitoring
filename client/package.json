@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@vx/axis": "^0.0.199",
     "axios": "^0.18.0",
     "chart.js": "^4.2.1",
     "classnames": "^2.2.6",
@@ -17,10 +18,12 @@
     "react-redux": "^5.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "2.1.1",
+    "recharts": "^2.5.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "start": "^5.1.0",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "vx": "^0.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

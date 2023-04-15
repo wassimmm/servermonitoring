@@ -1,5 +1,5 @@
 import React from 'react';
-import  '../styles/firewall_table.css'
+import  '../styles/bandwidth_table.css'
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {connectToServer} from "../../actions/serverActions.js";
@@ -9,7 +9,7 @@ import {connectToServer} from "../../actions/serverActions.js";
 //     connectToServer(serverId, userId, "sudo kill -9 "+pid);
 // };
 
-function firewallTable(props) {
+function bandwidthTable(props) {
     const { data, serverId } = props;
 
     // Check if the data prop is defined
@@ -20,37 +20,39 @@ function firewallTable(props) {
     const { user } = props.auth;
 
     return (
-        <table className="table-firewall">
-            <thead className="thead-firewall">
-            <tr className="tr-firewall">
-                <th className="th-firewall">device</th>
-                <th className="th-firewall">active zones</th>
-             
+        <table className="table-bandwidth">
+            <thead className="thead-bandwidth">
+            <tr className="tr-bandwidth">
+                <th className="th-bandwidth">device</th>
+                <th className="th-bandwidth">rate</th>
+            
                
             </tr>
             </thead>
-            <tbody className="tbody-firewall">
+            <tbody className="tbody-bandwidth">
             {data.map((item) => (
-                <tr className="tr-firewall" key={item.pid}>
-                    <td className="td-firewall">{item.device}</td>
-                    <td className="td-firewall">{item.activeZones}</td>
-                  
+                <tr className="tr-bandwidth" key={item.pid}>
+                    <td className="td-bandwidth">{item.device}</td>
+                    <td className="td-bandwidth">{item.rate}</td>
+                   
                     
                     {/* <td
-                        className="td-cpu"
+                        className="td-network"
                         style={{ display: "flex", justifyContent: "space-around" }}
                     >
-                   
+                    
                     </td> */}
                 </tr>
+                
             ))}
-            
+             
             </tbody>
+          
         </table>
     );
 }
 
-firewallTable.propTypes = {
+bandwidthTable.propTypes = {
     status: PropTypes.object.isRequired,
     connectToServer: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
@@ -64,6 +66,4 @@ const mapStateToProps = state => ({
     status: state.server
 });
 
-
-
-export default connect(mapStateToProps, { connectToServer })(firewallTable);
+export default connect(mapStateToProps, { connectToServer })(bandwidthTable);

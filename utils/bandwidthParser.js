@@ -10,8 +10,8 @@ function parseProcessLinebandwidth(str,error){
 
         result= {
           
-            "data":data[0][0],
-            "state":data[1][0],
+            "device":data[0][0],
+            "rate":data[1][0],
            
            
         
