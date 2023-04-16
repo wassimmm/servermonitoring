@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { connectToServer } from "../../actions/serverActions.js";
 import "../styles/cpu_table.css";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-
+import { useReactToPrint } from 'react-to-print'; // import the missing hook
 
 function CpuTable(props) {
   const { data, serverId } = props;
@@ -14,6 +14,11 @@ function CpuTable(props) {
   if (!data) {
     return null;
   }
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const { user } = props.auth;
 
@@ -30,38 +35,48 @@ function CpuTable(props) {
   }, [data]);
 
   return (
-    <div>
-      <div className="graph-container">
-        <LineChart width={800} height={300} data={cpuData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <XAxis dataKey="pid" />
-          <YAxis />
-          <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="cpu" stroke="#8884d8" />
-        </LineChart>
+    <div><div className="print_section">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <h1>Print this out !</h1>
+
+            <button onClick={handlePrint} className="printButton">Print</button>
+
+            <div className="graph-container" ref={componentRef}>
+              <LineChart width={800} height={300} data={cpuData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <XAxis dataKey="pid" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="cpu" stroke="#8884d8" />
+              </LineChart>
+            </div>
+            <table className="table-cpu">
+              <thead className="thead-cpu">
+                <tr className="tr-cpu">
+                  <th className="th-cpu">CPU</th>
+                  <th className="th-cpu">PID</th>
+                  <th className="th-cpu">User</th>
+                  <th className="th-cpu">Root</th>
+                </tr>
+              </thead>
+              <tbody className="tbody-cpu">
+                {cpuData.map((item) => (
+                  <tr className="tr-cpu" key={item.pid}>
+                    <td className="td-cpu">{item.cpu}</td>
+                    <td className="td-cpu">{item.pid}</td>
+                    <td className="td-cpu">{item.user}</td>
+                    <td className="td-cpu">{item.root}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <table className="table-cpu">
-        <thead className="thead-cpu">
-          <tr className="tr-cpu">
-            <th className="th-cpu">cpu</th>
-            <th className="th-cpu">pid</th>
-            <th className="th-cpu">user</th>
-            <th className="th-cpu">root</th>
-          </tr>
-        </thead>
-        <tbody className="tbody-cpu">
-          {data.map((item) => (
-            <tr className="tr-cpu" key={item.pid}>
-              <td className="td-cpu">{item.cpu}</td>
-              <td className="td-cpu">{item.pid}</td>
-              <td className="td-cpu">{item.user}</td>
-              <td className="td-cpu">{item.root}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </div></div>
   );
 }
 
