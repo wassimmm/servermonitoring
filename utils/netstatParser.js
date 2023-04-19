@@ -48,43 +48,105 @@ var protocoleByportnumber = { 1 : "TCP", 5: "RJE",
 
 
 
-
-
-
-
-
-
-
-
-
-function parseProcessLinerequest(str,error){
-    var result={}
-    var regex=/(?<=)\S+/g //capture values beetween spaces
-    var result={}
+ function parseProcessLinerequest(str,error){
+     var result={}
+     var regex=/(?<=)\S+/g //capture values beetween spaces
+     var result={}
     try{
-        var data=[...str.matchAll(regex)]
-        let protocol; 
-             let portnumber=data[4][0].match("\:(.*)").slice(str.indexOf(',') );
+         var data=[...str.matchAll(regex)]
+         let protocol; 
+            let portnumber=data[4][0].match("\:(.*)").slice(str.indexOf(',') );
              if (protocoleByportnumber [parseInt(portnumber)] == undefined)
-             protocol = "other"
-             else
-             protocol = protocoleByportnumber [parseInt(portnumber)] 
-             console.log("****" + portnumber)
-    
-        result= {
-            "protocol":data[0][0],
-            "SentQ":data[1][0],
-            "RecvQ":data[2][0],
-            "LocalAddress":data[3][0],
-            "ForeignAddress":data[4][0],
-            "ApplicationProtocol":protocol,
-            "State":data[5][0],
-            "ProgramName":data[6][0],
+            protocol = "other"
+              else
+              protocol = protocoleByportnumber [parseInt(portnumber)] 
+              console.log("****" + portnumber)
+ 
+            //    let foreignAddresse = data[4][0].split(":")[0]; // extract IP address from ForeignAddress
+          
+           
+           
+        
+             
+         result= {
+             "protocol":data[0][0],
+             "SentQ":data[1][0],
+             "RecvQ":data[2][0],
+             "LocalAddress":data[3][0],
+             "ForeignAddress":data[4][0],
+             "ApplicationProtocol":protocol,
+             "Hostname": protocol,
+             "State":data[5][0],
+             "ProgramName":data[6][0],
             
-        }
-    }catch(err){error(err)}
-    return result
-}
+         }
+    
+        
+     }catch(err){error(err)}
+     return result
+ }
+
+
+
+
+
+
+
+
+
+
+// function parseProcessLinerequest(str,error){
+//     var result={}
+//     var regex=/(?<=)\S+/g //capture values beetween spaces
+//     var result={}
+//     try{
+//         var data=[...str.matchAll(regex)]
+//         let protocol; 
+//              let portnumber=data[4][0].match("\:(.*)").slice(str.indexOf(',') );
+//              if (protocoleByportnumber [parseInt(portnumber)] == undefined)
+//              protocol = "other"
+//              else
+//              protocol = protocoleByportnumber [parseInt(portnumber)] 
+//              console.log("****" + portnumber)
+ 
+//             //  let porter=data[4][0].match("(.*)").slice(str.indexOf(',') );
+//             //    const dns = require('dns');
+
+               
+//                 let foreignAddresse = data[4][0].split(":")[0]; // extract IP address from ForeignAddress
+//                 let hostname; 
+//                   const dns = require('dns');
+//                   dns.reverse(foreignAddresse, (err, hostnames) => {
+//                     if (err) {
+//                         // console.error(err);
+//                         hostname = "other"
+//                     } else {
+//                         const currentHostname = hostnames[0]; // use the first hostname in the list
+//                        console.log("****----****" +currentHostname);
+//                        hostname = currentHostname
+                
+//                     }
+//                      });
+           
+          
+             
+//         result= {
+//             "protocol":data[0][0],
+//             "SentQ":data[1][0],
+//             "RecvQ":data[2][0],
+//             "LocalAddress":data[3][0],
+//             "ForeignAddress":data[4][0],
+//             "ApplicationProtocol":protocol,
+//             "Hostname":hostname,
+//             "State":data[5][0],
+//             "ProgramName":data[6][0],
+            
+//         }
+    
+        
+//     }catch(err){error(err)}
+//     return result
+// }
 
 module.exports=function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(error)=>{/*parser error messages*/ console.log(error)}){
      var data=data.split("\n").filter(v=>v!="")

@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import { connectToServer } from "../../actions/serverActions.js";
 import "../styles/cpu_table.css";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { useReactToPrint } from 'react-to-print'; // import the missing hook
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 function CpuTable(props) {
   const { data, serverId } = props;
@@ -16,9 +17,6 @@ function CpuTable(props) {
   }
 
   const componentRef = useRef();
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
 
   const { user } = props.auth;
 
@@ -34,6 +32,15 @@ function CpuTable(props) {
     }));
   }, [data]);
 
+  const handlePrint = () => {
+    html2canvas(componentRef.current).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 0, 50, 180, 80);
+      pdf.save("cpu-data.pdf");
+    });
+  };
+
   return (
     <div><div className="print_section">
       <div className="container">
@@ -44,6 +51,7 @@ function CpuTable(props) {
             <button onClick={handlePrint} className="printButton">Print</button>
 
             <div className="graph-container" ref={componentRef}>
+            <h2>        This is the graph of CPU</h2>
               <LineChart width={800} height={300} data={cpuData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <XAxis dataKey="pid" />
                 <YAxis />
@@ -76,7 +84,8 @@ function CpuTable(props) {
           </div>
         </div>
       </div>
-    </div></div>
+      </div>
+ </div>
   );
 }
 

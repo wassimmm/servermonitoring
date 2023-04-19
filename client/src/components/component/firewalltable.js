@@ -23,7 +23,7 @@ function firewallTable(props) {
         <table className="table-firewall">
             <thead className="thead-firewall">
             <tr className="tr-firewall">
-                <th className="th-firewall">device</th>
+                <th className="th-firewall">interface</th>
                 <th className="th-firewall">active zones</th>
              
                
@@ -32,7 +32,7 @@ function firewallTable(props) {
             <tbody className="tbody-firewall">
             {data.map((item) => (
                 <tr className="tr-firewall" key={item.pid}>
-                    <td className="td-firewall">{item.device}</td>
+                    <td className="td-firewall">{item.interface}</td>
                     <td className="td-firewall">{item.activeZones}</td>
                   
                     
