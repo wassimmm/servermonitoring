@@ -13,7 +13,8 @@ const psParser = require("../../utils/psParser");
 const nmcliParser = require("../../utils/nmcliParser")
 const firewallParser = require("../../utils/firewallParser")
 const netstatParser = require("../../utils/netstatParser")
-const bandwidthParser = require("../../utils/bandwidthParser")
+const bandwidthParser = require("../../utils/bandwidthParser");
+const { json } = require("body-parser");
 
 async function connectToSSHServer(server) {
     return new Promise((resolve, reject) => {
@@ -68,7 +69,9 @@ async function cmdOption(conn, option, res, serverIp) {
        if (option === "request")
        {
     //  {  console.log(" ip du serveur " + 'netstat -tupan | grep '+ serverIp)
-         conn.exec(`netstat -tupan | grep ${serverIp}` ,(err,stream) => {
+        //  conn.exec(`netstat -tupan | grep ${serverIp}` ,(err,stream) => {
+         conn.exec(`netstat -tupan | grep ${serverIp}`,(err,stream) => {
+         
              executeCMD(err, stream, option, res);
             
        });
@@ -148,18 +151,18 @@ function executeCMD(err, stream, cmd, res) {
         response = data;
         dataBuffer = Buffer.concat([dataBuffer, data]);
     });
-    stream.on('end', (code) => {
+    stream.on('end',async (code) => {
         console.log(code)
         if (code) {
             res.status(400).json('Insufficient Privileges!');
-        } else res.status(200).json(parser(dataBuffer,cmd));
+        } else res.status(200).json(await parser(dataBuffer,cmd));
         console.log(response);
     }).on('close', (code) => {
         console.log(`Command execution closed with code ${code}`);
     });
 }
 
-function parser(data, option){
+async function parser(data, option){
     console.log(data)
     console.log(option)
     if (option.startsWith('processes')) {
@@ -181,9 +184,10 @@ function parser(data, option){
 //          return data.toString();
 //    }
    if(option.startsWith('request')) {
-       return netstatParser(data.toString());
-    //    console.log(data);
-    //    return data.toString();
+         return netstatParser(data.toString())
+          
+            //  console.log(data);
+            //  return data.toString();
     }
     
       if(option.startsWith('bandwidth')) {

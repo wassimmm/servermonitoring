@@ -40,7 +40,10 @@ function CpuTable(props) {
       pdf.save("cpu-data.pdf");
     });
   };
-
+  const headingStyle = {
+    textAlign: 'center',
+    color: 'blue',
+  };
   return (
     <div><div className="print_section">
       <div className="container">
@@ -51,7 +54,9 @@ function CpuTable(props) {
             <button onClick={handlePrint} className="printButton">Print</button>
 
             <div className="graph-container" ref={componentRef}>
-            <h2>        This is the graph of CPU</h2>
+            <div>
+      <h2 style={headingStyle}>This is the graph of CPU</h2>
+    </div>
               <LineChart width={800} height={300} data={cpuData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <XAxis dataKey="pid" />
                 <YAxis />

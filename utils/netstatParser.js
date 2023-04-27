@@ -47,131 +47,206 @@ var protocoleByportnumber = { 1 : "TCP", 5: "RJE",
 1080:"Socks"}
 
 
+const dns = require('dns');
+const dnsPromises = dns.promises;
 
- function parseProcessLinerequest(str,error){
-     var result={}
-     var regex=/(?<=)\S+/g //capture values beetween spaces
-     var result={}
-    try{
-         var data=[...str.matchAll(regex)]
-         let protocol; 
-            let portnumber=data[4][0].match("\:(.*)").slice(str.indexOf(',') );
-             if (protocoleByportnumber [parseInt(portnumber)] == undefined)
-            protocol = "other"
-              else
-              protocol = protocoleByportnumber [parseInt(portnumber)] 
-              console.log("****" + portnumber)
- 
-            //    let foreignAddresse = data[4][0].split(":")[0]; // extract IP address from ForeignAddress
-          
-           
-           
-        
-             
-         result= {
-             "protocol":data[0][0],
-             "SentQ":data[1][0],
-             "RecvQ":data[2][0],
-             "LocalAddress":data[3][0],
-             "ForeignAddress":data[4][0],
-             "ApplicationProtocol":protocol,
-             "Hostname": protocol,
-             "State":data[5][0],
-             "ProgramName":data[6][0],
-            
-         }
+async function getHostname(foreignAddresse) {
+  return await dns.reverse(foreignAddresse) 
+}
+
+
+
+// function parseProcessLinerequest(str, error) {
+//   var regex = /(?<=)\S+/g; //capture values between spaces
+//   var result = {};
+
+//   try {
+//     var data = ["", "", "", "", "", "", "", "", ""];
+//     data = [...str.matchAll(regex)];
+//     let protocol;
+//     let portnumber = data[4][0].match("\:(.*)")[1];
+//     if (protocoleByportnumber[parseInt(portnumber)] == undefined)
+//       protocol = "other"
+//     else
+//       protocol = protocoleByportnumber[parseInt(portnumber)]
+//     let input = data[4][0];
+//     var rege = /^([\d\.]+):\d+$/;
+//     let match = input.match(rege);
+//     let foreignAddress = match ? match[1] : null;
+
+//     // getHostname(foreignAddress, result, async function() {
+//     //   result.protocol = data[0][0];
+//     //   result.SentQ = data[1][0];
+//     //   result.RecvQ = data[2][0];
+//     //   result.LocalAddress = data[3][0];
+//     //   result.ForeignAddress = data[4][0];
+//     //   result.ApplicationProtocol = protocol;
+//     //   result.State = data[5][0];
+//     //   result.ProgramName = data[6][0];
+
+//     //   // Return JSON object
+      
     
-        
-     }catch(err){error(err)}
-     return result
- }
-
-
-
-
-
-
-
-
-
-
-// function parseProcessLinerequest(str,error){
-//     var result={}
-//     var regex=/(?<=)\S+/g //capture values beetween spaces
-//     var result={}
-//     try{
-//         var data=[...str.matchAll(regex)]
-//         let protocol; 
-//              let portnumber=data[4][0].match("\:(.*)").slice(str.indexOf(',') );
-//              if (protocoleByportnumber [parseInt(portnumber)] == undefined)
-//              protocol = "other"
-//              else
-//              protocol = protocoleByportnumber [parseInt(portnumber)] 
-//              console.log("****" + portnumber)
+     
+//     //   console.log("***"+JSON.stringify(result))   
+//     //  });
  
-//             //  let porter=data[4][0].match("(.*)").slice(str.indexOf(',') );
-//             //    const dns = require('dns');
-
-               
-//                 let foreignAddresse = data[4][0].split(":")[0]; // extract IP address from ForeignAddress
-//                 let hostname; 
-//                   const dns = require('dns');
-//                   dns.reverse(foreignAddresse, (err, hostnames) => {
-//                     if (err) {
-//                         // console.error(err);
-//                         hostname = "other"
-//                     } else {
-//                         const currentHostname = hostnames[0]; // use the first hostname in the list
-//                        console.log("****----****" +currentHostname);
-//                        hostname = currentHostname
-                
-//                     }
-//                      });
-           
-          
-             
-//         result= {
-//             "protocol":data[0][0],
-//             "SentQ":data[1][0],
-//             "RecvQ":data[2][0],
-//             "LocalAddress":data[3][0],
-//             "ForeignAddress":data[4][0],
-//             "ApplicationProtocol":protocol,
-//             "Hostname":hostname,
-//             "State":data[5][0],
-//             "ProgramName":data[6][0],
-            
-//         }
     
-        
-//     }catch(err){error(err)}
-//     return result
+  
+//     console.log("**"+JSON.stringify(result))
+//   } catch(err){error(err)
+//   }
+//   return result
 // }
 
-module.exports=function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(error)=>{/*parser error messages*/ console.log(error)}){
-     var data=data.split("\n").filter(v=>v!="")
-     var result={
 
-        request:[...( [
-                 (()=>{
-                 var result=[]
-                 for (var i=1;i<data.length;i++){
-                     var proc=null
-                     try{
-                         var proc=parseProcessLinerequest(data[i],error)
-                         if(typeof options.pid_filter=="function"){
-                             proc=options.pid_filter(proc)
-                         }//if
-                     }catch(err){error(err)}
-                     proc?result.push(proc):null
-                 }//for
-                 return result.slice(0,options.pid_limit||result.length).sort(options.pid_sort)
-             })()//for
-         ]
-     )]
 
- }//result
 
- return result
 
- }//export
+
+
+ function parseProcessLinerequest(str,error){
+    var result={}
+    var regex=/(?<=)\S+/g //capture values beetween spaces
+    var result={}
+    try{
+        var data=[...str.matchAll(regex)]
+        let protocol; 
+             let portnumber=data[4][0].match("\:(.*)").slice(str.indexOf(',') );
+             if (protocoleByportnumber [parseInt(portnumber)] == undefined)
+             protocol = "other"
+             else
+             protocol = protocoleByportnumber [parseInt(portnumber)] 
+             console.log("****" + portnumber)
+ 
+            //  let porter=data[4][0].match("(.*)").slice(str.indexOf(',') );
+            //    const dns = require('dns');
+
+               
+                // let foreignAddresse = data[4][0].split(":")[0]; // extract IP address from ForeignAddress
+                // let hostname; 
+                //   const dns = require('dns');
+                //   dns.reverse(foreignAddresse, (err, hostnames) => {
+                //     if (err) {
+                //         // console.error(err);
+                //         hostname = "other"
+                //     } else {
+                //         const currentHostname = hostnames[0]; // use the first hostname in the list
+                //        console.log("****----****" +currentHostname);
+                //        hostname = currentHostname
+                
+                //     }
+                //      });
+                let input = data[4][0];
+                    var rege = /^([\d\.]+):\d+$/;
+                    let match = input.match(rege);
+                    let foreignAddress = match ? match[1] : null;
+
+                   
+          
+        //    var hostnom 
+           let hostnom = dnsPromises.reverse(
+
+            "157.240.22.35").then(data => {
+                //  console.log("**data**"+data)
+            hostnom = data});
+            
+            
+            //  console.log("****host**"+JSON.stringify(hostnom))
+            //  console.log("****host**"+hostnom)
+
+        result= {
+            "protocol":data[0][0],
+            "SentQ":data[1][0],
+            "RecvQ":data[2][0],
+            "LocalAddress":data[3][0],
+            "ForeignAddress":data[4][0],
+            "ApplicationProtocol":protocol,
+            // "Hostname":hostnom[0],
+            "State":data[5][0],
+            "ProgramName":data[6][0],
+            
+        }
+      
+        // console.log("result**"+JSON.stringify(result)+"hst**"+await getHostname("157.240.22.35"))
+    }catch(err){error(err)}
+    return result
+}
+
+// module.exports= function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(error)=>{/*parser error messages*/ console.log(error)}){
+//      var data=data.split("\n").filter(v=>v!="")
+//      var result={
+
+//         request:[...( [
+//                  ( function (){
+//                  var result=[]
+//                  for (var i=1;i<data.length;i++){
+//                      var proc=null
+//                      try{
+//                         var proc;
+//                         proc = getHostname("157.240.22.35",proc,parseProcessLinerequest(data[i],error))
+//                         //  var proc= parseProcessLinerequest(data[i],error)
+                         
+//                         //  console.log("*******prochotname"+proc)
+//                          if(typeof options.pid_filter=="function"){
+//                              proc=options.pid_filter(proc)
+//                          }//if
+//                      }catch(err){error(err)}
+//                      proc?result.push(proc):null
+//                  }//for
+//                  return result.slice(0,options.pid_limit||result.length).sort(options.pid_sort)
+//              })()//for
+//          ]
+//      )]
+
+//  }//result
+
+//  return result
+
+//  }//export
+
+
+module.exports=async function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(error)=>{/*parser error messages*/ console.log(error)}){
+    var data=data.split("\n").filter(v=>v!="")
+    var result={
+
+        request:[... ( [
+                (()=>{
+                var result=[]
+                for (var i=1;i<data.length-1;i++){
+                    var proc=null
+                    
+                    try{
+                       
+                        var proc=parseProcessLinerequest(data[i],error)
+                        
+                        if(typeof options.pid_filter=="function"){
+                            proc=options.pid_filter(proc)
+                        }//if
+                    }catch(err){error(err)}
+                    proc?result.push(proc):null
+                }//for
+                return result.slice(0,options.pid_limit||result.length).sort(options.pid_sort)
+            })()//for
+        ]
+    )]
+
+}//result
+// console.log("result"+JSON.stringify(result.request))
+//  await (result.request[0]).map(async e=>{
+//     hotname = await dnsPromises.reverse(
+
+//         "157.240.22.35");
+//         e.Hostname = hotname[0];
+//     return e
+// })
+// console.log("result:" + JSON.stringify(result))
+let resultArray =  await Promise.all((result.request[0]).map(async e=>{
+    hotname = await dnsPromises.reverse("157.240.22.35");
+        e.Hostname = hotname[0];
+    return e
+}));
+return resultArray
+
+
+}//export
