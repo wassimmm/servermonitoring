@@ -49,10 +49,11 @@ var protocoleByportnumber = { 1 : "TCP", 5: "RJE",
 
 const dns = require('dns');
 const dnsPromises = dns.promises;
+let foreignAddress = "0"
 
-async function getHostname(foreignAddresse) {
-  return await dns.reverse(foreignAddresse) 
-}
+// async function getHostname(foreignAddresse) {
+//   return await dns.reverse(foreignAddresse) 
+// }
 
 
 
@@ -105,7 +106,7 @@ async function getHostname(foreignAddresse) {
 
 
 
- function parseProcessLinerequest(str,error){
+ function parseProcessLinerequest(str,error,foreignAddress){
     var result={}
     var regex=/(?<=)\S+/g //capture values beetween spaces
     var result={}
@@ -141,15 +142,15 @@ async function getHostname(foreignAddresse) {
                     var rege = /^([\d\.]+):\d+$/;
                     let match = input.match(rege);
                     let foreignAddress = match ? match[1] : null;
-
+                 
                    
           
         //    var hostnom 
-           let hostnom = dnsPromises.reverse(
+        //    let hostnom = dnsPromises.reverse(
 
-            "157.240.22.35").then(data => {
-                //  console.log("**data**"+data)
-            hostnom = data});
+        //     "157.240.22.35").then(data => {
+        //         //  console.log("**data**"+data)
+        //     hostnom = data});
             
             
             //  console.log("****host**"+JSON.stringify(hostnom))
@@ -167,11 +168,15 @@ async function getHostname(foreignAddresse) {
             "ProgramName":data[6][0],
             
         }
-      
+     
         // console.log("result**"+JSON.stringify(result)+"hst**"+await getHostname("157.240.22.35"))
     }catch(err){error(err)}
     return result
+   
 }
+
+console.log("***"+foreignAddress)
+
 
 // module.exports= function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(error)=>{/*parser error messages*/ console.log(error)}){
 //      var data=data.split("\n").filter(v=>v!="")
@@ -208,6 +213,7 @@ async function getHostname(foreignAddresse) {
 
 module.exports=async function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},error=(error)=>{/*parser error messages*/ console.log(error)}){
     var data=data.split("\n").filter(v=>v!="")
+    
     var result={
 
         request:[... ( [
@@ -241,9 +247,31 @@ module.exports=async function(data,options={pid_sort(a,b){return a.cpu-b.cpu}},e
 //     return e
 // })
 // console.log("result:" + JSON.stringify(result))
+
+// let input = data[4][0];
+// var rege = /^([\d\.]+):\d+$/;
+// let match = input.match(rege);
+// let foreignAddress = match ? match[1] : null;
+
+  
+  
+
+
+
 let resultArray =  await Promise.all((result.request[0]).map(async e=>{
-    hotname = await dnsPromises.reverse("157.240.22.35");
-        e.Hostname = hotname[0];
+    let input = e.ForeignAddress
+    var rege = /^([\d\.]+):\d+$/;
+    let match = input.match(rege);
+    let foreignAddress = match ? match[1] : null;
+    console.log("foreignadress"+foreignAddress)
+    let hotname;
+    try {
+        hotname = await dnsPromises.reverse(foreignAddress);
+        e.Hostname = hotname[0]?hostname[0]:"other";
+    }catch(exc){
+        e.Hostname = "other";
+        console.log("Exception:   "+JSON.stringify(exc))
+    }
     return e
 }));
 return resultArray
