@@ -48,6 +48,7 @@ var protocoleByportnumber = { 1 : "TCP", 5: "RJE",
 
 
 const dns = require('dns');
+const { hostname } = require('os');
 const dnsPromises = dns.promises;
 let foreignAddress = "0"
 
@@ -167,6 +168,8 @@ let foreignAddress = "0"
             "State":data[5][0],
             "ProgramName":data[6][0],
             
+            
+            
         }
      
         // console.log("result**"+JSON.stringify(result)+"hst**"+await getHostname("157.240.22.35"))
@@ -267,14 +270,16 @@ let resultArray =  await Promise.all((result.request[0]).map(async e=>{
     let hotname;
     try {
         hotname = await dnsPromises.reverse(foreignAddress);
-        e.Hostname = hotname[0]?hostname[0]:"other";
+        console.log("hoooooostname"+hotname)
+        e.Hostname = hotname[0];
     }catch(exc){
         e.Hostname = "other";
         console.log("Exception:   "+JSON.stringify(exc))
     }
     return e
 }));
-return resultArray
+result.request[0] = resultArray;
+return result
 
 
 }//export

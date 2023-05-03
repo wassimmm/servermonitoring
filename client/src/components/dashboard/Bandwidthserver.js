@@ -24,6 +24,7 @@ class Bandwidthserver extends Component {
     }
 
     componentDidMount() {
+        this.mytimer = setInterval(() => {
         if (!this.props.auth.isAuthenticated) {
             this.props.history.push('/login');
         } else {
@@ -31,12 +32,14 @@ class Bandwidthserver extends Component {
             this.setState({ ...this.state, server: this.props.match.params.id });
             this.props.connectToServer(this.state.server, user.id, this.state.option);
         }
-    }
+    },3000);
+    };
 
     componentDidUpdate(prevProps) {
         if (prevProps.status.data !== this.props.status.data) {
             this.setState({ ...this.state, connection: this.props.status.data });
         }
+        clearInterval(this.myTimer);
     }
 
     render() {
